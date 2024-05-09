@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Donor Credits</title>
+    <link rel="stylesheet" href="css/credits.css"> 
+</head>
+<body>
+    <header>
+        <div class="title">
+            <h1>Donor Credits</h1>
+        </div>
+        <div class="back">
+            <button onclick="location.href='donors-dashboard.html'">Back to Dashboard</button>
+        </div>
+    </header>
+    <div class="container">
+        <!-- Display the user's credit score -->
+        <div class="scoreboard">
+            <h2>Your Credit Score</h2>
+            <div id="user-credit-score">
+                <!-- User's credit score will be displayed here dynamically -->
+            </div>
+        </div>
+
+        <!-- Text box and button to input code and get credits -->
+        <div class="credit-control">
+            <input type="text" id="code-input" placeholder="Enter the code">
+            <button id="get-credits-btn">Get</button>
+        </div>
+        
+        <table id="credits-table">
+            <thead>
+                <tr>
+                    <!-- Table header -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Credits data will be populated here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Include jQuery for easier AJAX handling -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Function to fetch the user's credit score and display it
+            function fetchUserCreditScore() {
+                $.ajax({
+                    type: 'POST',
+                    url: 'get_user_credit_score.php',
+                    success: function(response){
+                        $('#user-credit-score').html('<p>' + response + '</p>');
+                    },
+                    error: function(){
+                        // If there's an error, display 0
+                        $('#user-credit-score').html('<p>0</p>');
+                    }
+                });
+            }
+
+            // Call the function when the page loads
+            fetchUserCreditScore();
+
+            $('#get-credits-btn').click(function(){
+                var code = $('#code-input').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'process_credits.php',
+                    data: { code: code },
+                    success: function(response){
+                        alert(response);
+                        // Reload the page or update UI as needed
+                        location.reload();
+                    },
+                    error: function(){
+                        alert('Error processing request. Please try again later.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

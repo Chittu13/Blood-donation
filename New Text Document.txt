@@ -1,0 +1,25 @@
+CREATE TABLE history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    name VARCHAR(255),
+    phone VARCHAR(20),
+    email VARCHAR(255),
+    blood_group VARCHAR(10),
+    state VARCHAR(100),
+    city VARCHAR(100),
+    address TEXT,
+    zip_code VARCHAR(20),
+    code VARCHAR(20)
+);
+
+
+
+CREATE TABLE ScoreTable (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    phone VARCHAR(15),
+    city VARCHAR(100),
+    state VARCHAR(100),
+    score INT
+);
+

@@ -1,0 +1,17 @@
+CREATE DATABASE IF NOT EXISTS user_registration;
+USE user_registration;
+
+CREATE TABLE IF NOT EXISTS user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20),
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    date_of_birth DATE,
+    blood_group VARCHAR(5),
+    state VARCHAR(100),
+    city VARCHAR(100),
+    zipcode VARCHAR(20),
+    address TEXT,
+    UNIQUE(email)
+);
