@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome Page</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Your CSS styles here */
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <button onclick="location.href='index.html'">Home</button>
+        <button onclick="location.href='register.html'">Register</button>
+        <button onclick="location.href='login.html'">Login</button>
+    </nav>
+    <div class="hero-video">
+        <video autoplay muted loop>
+            <source src="homevideo1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="blood-donation-message">
+        <h2>Blood Donation</h2>
+        <p>Join us in saving lives through blood donation. Your contribution is invaluable.</p>
+    </div>
+    <!-- Find a Donor Section -->
+    <div class="find-donor">
+        <h2>Find a Donor</h2>
+        <form id="donorForm" action="submit_form.php" method="post">
+            <input type="text" id="name" name="name" placeholder="Name" required>
+            <input type="tel" id="phone" name="phone" placeholder="Phone Number" required pattern="[0-9]{10}" title="Please enter a 10-digit phone number">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <select id="bloodGroup" name="bloodGroup" required>
+                <option value="" disabled selected>Select Blood Group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+            <input type="text" id="state" name="state" placeholder="State" required>
+            <input type="text" id="city" name="city" placeholder="City" required>
+            <input type="text" id="address" name="address" placeholder="Address" required> <!-- New field: Address -->
+            <input type="text" id="zipCode" name="zipCode" placeholder="Zip Code" required> <!-- New field: Zip Code -->
+            <div id="map"></div> <!-- Map container -->
+            <input type="hidden" id="location" name="location" required>
+            <button type="submit" id="findDonorBtn">Find Donor</button>
+        </form>
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="js/map_index.js"></script> <!-- Linking the map script -->
+    <script>
+        document.getElementById('findDonorBtn').addEventListener('click', function() {
+            document.getElementById('donorForm').submit();
+        });
+    </script>
+</body>
+</html>
