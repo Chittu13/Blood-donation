@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Donor Dashboard</title>
+    <link rel="stylesheet" href="css/donors-dashboard.css"> <!-- Include your CSS file for styling -->
+    <style>
+        .donor {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .donor-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .donor-details p {
+            margin: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Function to handle the click event of the donate button
+            $("#donate-button").click(function(){
+                // Make an AJAX request to donate.php
+                $.ajax({
+                    url: "donate.php",
+                    type: "GET",
+                    success: function(data){
+                        // Check if data contains an error
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            // Clear previous data
+                            $("#donation-data").empty();
+                            // Display the data on the page
+                            $.each(data, function(index, donor){
+                                $("#donation-data").append(
+                                    "<div class='donor'>" +
+                                    "<input type='checkbox' class='donor-checkbox' id='donor-" + index + "' data-id='" + index + "'/>" + // Add checkbox with unique ID and data-id attribute
+                                    "<label for='donor-" + index + "'>Name: " + donor.name + ", Blood Group: " + donor.blood_group + "</label>" + // Add label for checkbox
+                                    "<div class='donor-details'>" + // Donor details
+                                    "<p><strong>Name:</strong> " + donor.name + "</p>" +
+                                    "<p><strong>Phone:</strong> " + donor.phone + "</p>" +
+                                    "<p><strong>Email:</strong> " + donor.email + "</p>" +
+                                    "<p><strong>Blood Group:</strong> " + donor.blood_group + "</p>" +
+                                    "<p><strong>State:</strong> " + donor.state + "</p>" +
+                                    "<p><strong>City:</strong> " + donor.city + "</p>" +
+                                    "<p><strong>Address:</strong> " + donor.address + "</p>" +
+                                    "</div>" +
+                                    "<button class='send-sms' id='send-sms-" + index + "' style='display: none;'>Send SMS</button>" + // Add Send SMS button
+                                    "</div>"
+                                );
+                            });
+
+                            // Attach click event handler to the "Send SMS" buttons
+                            $(".send-sms").click(function() {
+                                var donorIndex = $(this).attr('id').split('-')[2]; // Extract donor index from button ID
+                                var donorPhone = data[donorIndex].phone; // Get donor phone number
+                                var donorName = data[donorIndex].name; // Get donor name
+                                var donorDetails = "Name: " + donorName + "\nBlood Group: " + data[donorIndex].blood_group; // Prepare donor details
+                                
+                                // Make AJAX request to send_sms.php
+                                $.ajax({
+                                    url: "send_sms.php", // Path to send_sms.php
+                                    type: "POST", // Use POST method
+                                    data: {
+                                        phone: donorPhone, // Send donor phone number
+                                        name: donorName, // Send donor name
+                                        details: donorDetails // Send donor details
+                                    },
+                                    success: function(response) {
+                                        alert(response); // Show success message
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error(xhr.responseText);
+                                        alert("Error: Unable to send SMS.");
+                                    }
+                                });
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert("Error: Unable to fetch data.");
+                    }
+                });
+            });
+
+            // Event handler for checkbox change
+            $(document).on('change', '.donor-checkbox', function(){
+                var isChecked = $(this).is(':checked');
+                var donorId = $(this).data('id');
+                if (isChecked) {
+                    // Show Send SMS button for selected donor
+                    $("#send-sms-" + donorId).show();
+                } else {
+                    // Hide Send SMS button if checkbox is unchecked
+                    $("#send-sms-" + donorId).hide();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="title">
+            <h1>Donor Dashboard</h1>
+        </div>
+        <div class="logout">
+            <button onclick="location.href='index.html'">Logout</button>
+        </div>
+    </header>
+    <div class="container">
+        <nav class="sidebar">
+            <ul>
+                <li><a href="profile.php">Profile</a></li>
+                <li><a href="change-password.html">Change Password</a></li>
+               
+                <li><a href="credits.html">Credits</a></li>
+            </ul>
+        </nav>
+        <main id="main-content">
+            <!-- Main content area. Content changes based on the selected sidebar option. -->
+            <!-- Placeholder for dynamic content -->
+            <div class="donate-button">
+                <!-- Button to trigger donation data retrieval -->
+                <button id="donate-button">Donate</button>
+            </div>
+            <div id="donation-data">
+                <!-- Data will be displayed here -->
+            </div>
+        </main>
+    </div>
+</body>
+</html>
